@@ -48,7 +48,12 @@ class CryptoData(object):
         
         # each 15 mins update data? 
         # print(f"start: {msg['k']['t']}  end: {msg['k']['T']}  close: {msg['k']['c']}\n")
-        
+        if ('e' in msg.keys() and msg['e'] == 'error'):
+            self.ws_client.stop_socket(self.ws_client.start_kline_futures_socket)
+            self.ws_client.start_kline_futures_socket(callback=self.handle_ma_socket_message, 
+                                    symbol=self.symbol, 
+                                    interval=self.interval
+                                    )
         # This record is not finished
         if (not (msg['k']['x'])):
             return
@@ -74,6 +79,7 @@ class CryptoData(object):
 
     def handle_strategy_data(self, malen=5, interval=15):
         self.ma_data = {}
+        self.interval = interval
         time_params = [f"{interval * (malen+1)} mins ago UTC", f"{interval}m"]
         # get the last 5 close price (hours) maybe SubKlineFuturesEndPoint
         self.ma_data['kline'] = self.get_from_rest(malen, time_params)
@@ -82,5 +88,3 @@ class CryptoData(object):
         self.get_from_websocket_stream(type='kline', interval=f"{interval}m")
         self.get_from_websocket_stream(type='bookticker')
         
-    def _ping_server(self):
-        pass

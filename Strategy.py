@@ -130,7 +130,7 @@ class MomentumSignal(StrategyBase):
                 type=ORDER_TYPE_LIMIT,
                 timeInForce=TIME_IN_FORCE_GTC,
                 quantity=size,
-                price=str(self.crypto_data.real_time_data['best_bid']-100),
+                price=str(self.crypto_data.real_time_data['best_bid']),
                 newClientOrderId=self._create_cid()
             )
 
@@ -148,7 +148,7 @@ class MomentumSignal(StrategyBase):
                 type=ORDER_TYPE_LIMIT,
                 timeInForce=TIME_IN_FORCE_GTC,
                 quantity=size,
-                price=str(self.crypto_data.real_time_data['best_ask']+100),
+                price=str(self.crypto_data.real_time_data['best_ask']),
                 newClientOrderId=self._create_cid()
             )
 
@@ -188,7 +188,7 @@ class MomentumSignal(StrategyBase):
                 type=ORDER_TYPE_LIMIT,
                 timeInForce=TIME_IN_FORCE_GTC,
                 quantity=(remaining_size),
-                price=str(self.crypto_data.real_time_data['best_bid']-100),
+                price=str(self.crypto_data.real_time_data['best_bid']),
                 newClientOrderId=self._create_cid()
             )
 
@@ -205,7 +205,7 @@ class MomentumSignal(StrategyBase):
                 type=ORDER_TYPE_LIMIT,
                 timeInForce=TIME_IN_FORCE_GTC,
                 quantity=(remaining_size),
-                price=str(self.crypto_data.real_time_data['best_ask']+100),
+                price=str(self.crypto_data.real_time_data['best_ask']),
                 newClientOrderId=self._create_cid()
             )
 
