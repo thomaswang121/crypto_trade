@@ -32,6 +32,12 @@ class StrategyBase(object):
         f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  {transaction_record}\n")
         f.close()
 
+    def write_signal_log(self, signal):
+        file_path = self._folder / f"{datetime.now().strftime('%Y-%m-%d')}_signal.log"
+        f = open(file_path, 'a')
+        f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  {signal}\n")
+        f.close()
+
     def _save_data(self, **kwargs):
         file_path = self._folder / 'last_trading_status.json'
         f = open(file_path, 'w')

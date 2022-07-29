@@ -29,8 +29,8 @@ while (True):
         time.sleep(5)
         continue
 
-    strategy_framework = threading.Thread(target=StrategyDriver.run, name='Run', kwargs={'rs':rs, 'ws':ws})
-    connection = threading.Thread(target=Connection.ping_server, name='Check_connection', kwargs={'rs':rs})
+    strategy_framework = threading.Thread(target=StrategyDriver.run, name='Run', daemon=True, kwargs={'rs':rs, 'ws':ws})
+    connection = threading.Thread(target=Connection.ping_server, name='Check_connection', daemon=True, kwargs={'rs':rs})
 
     ws.start()
     strategy_framework.start()

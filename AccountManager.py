@@ -47,7 +47,8 @@ class AccountInfomation(object):
             self.current_position[strategy_id] = {
                 'position'  : 0.0,
             }
-        
+            self._save_data(strategy_id=strategy_id, position=self.current_position[strategy_id]['position'])
+
         else:
             f = open(self._log_path[strategy_id]['last_trading_status'], 'r')
             last_trading_status = json.load(f)
