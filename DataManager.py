@@ -37,23 +37,23 @@ class CryptoData(object):
         self.data_kline[strategy_id] = []
 
         if timeframe == 'hour':
-            time_params = [f"{interval * (slen+1)} hours ago UTC", f"{interval}h"]
+            time_params = [f"{interval * (slen+2)} hours ago UTC", f"{interval}h"]
             self.update_hour_flag[strategy_id] = False
         
         elif timeframe == 'min':
-            time_params = [f"{interval * (slen+1)} mins ago UTC", f"{interval}m"]
+            time_params = [f"{interval * (slen+2)} mins ago UTC", f"{interval}m"]
             self.update_min_flag[strategy_id] = False
 
         # get history kline data
         self.data_kline[strategy_id] = self.get_from_rest(slen+1, time_params)
         
         # Avoid duplicate subscriptions
-        if interval not in self._sub_list:
+        if time_params[1] not in self._sub_list:
             self.ws_client.start_kline_futures_socket(callback=func, 
                                     symbol=self.symbol, 
                                     interval=time_params[1]
                                     )
-            self._sub_list.append(interval)
+            self._sub_list.append(time_params[1])
         
     def get_from_rest(self, length, time_params) -> List:
         

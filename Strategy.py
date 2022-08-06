@@ -250,7 +250,7 @@ class DoubleSma(StrategyBase):
 
             try:
                 if (all(ele > 0 for ele in self.crypto_data.real_time_data.values())) and (
-                    len(self.crypto_data.data_kline[self.strategy_id]) == self.slen
+                    len(self.crypto_data.data_kline[self.strategy_id]) >= self.slen
                     ):
                     self.detect()
             
@@ -280,11 +280,11 @@ class DoubleSma(StrategyBase):
         if (self._check_order()) or (self._check_position()):
             return
     
-        # print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} -> {self.strategy_id} start detect")
-        if not self.crypto_data.update_min_flag[self.strategy_id]:
+        # check data is updated
+        if not self.crypto_data.update_hour_flag[self.strategy_id]:
             return
 
-        self.crypto_data.update_min_flag[self.strategy_id] = False
+        self.crypto_data.update_hour_flag[self.strategy_id] = False
 
         # To avoid websocket delay
         if (self.account.current_order[self.strategy_id]['flag']):
@@ -297,8 +297,7 @@ class DoubleSma(StrategyBase):
 
         pre_fma = sum(self.crypto_data.data_kline[self.strategy_id][-self.flen-1:-1]) / self.flen
         pre_sma = sum(self.crypto_data.data_kline[self.strategy_id][:-1])/ self.slen
-        
-        print(f"fma:{round(fma, 2)}, sma:{round(sma, 2)}, pre_fma:{round(pre_fma, 2)}, pre_sma:{round(pre_sma, 2)}")
+        print(f"{self.strategy_id}->fma:{round(fma, 2)}, sma:{round(sma, 2)}, pre_fma:{round(pre_fma, 2)}, pre_sma:{round(pre_sma, 2)}")
         self.write_signal_log(f"fma:{round(fma, 2)}, sma:{round(sma, 2)}, pre_fma:{round(pre_fma, 2)}, pre_sma:{round(pre_sma, 2)}")
 
         # cross up
@@ -314,9 +313,9 @@ class DoubleSma(StrategyBase):
             order_size = round(order_size, self.crypto_data.qprecision)
 
         else:
-            print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {self.strategy_id} : No Cross Signal!")
+            # print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} {self.strategy_id} : No Cross Signal!")
             return
-        
+
         self._create_order(order_size, fma, sma)
 
 

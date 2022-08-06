@@ -13,7 +13,7 @@ class Connection(object):
             except:
                 cls.stop_flag = True
 
-            time.sleep(10)
+            time.sleep(3)
     
     @staticmethod
     def refresh_websocket(rs):

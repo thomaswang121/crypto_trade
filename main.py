@@ -16,13 +16,15 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 api_key = os.environ['api_key']
 api_secret = os.environ['api_secret']
 
+rs = Client(api_key, api_secret)
+ws = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
+connection = threading.Thread(target=Connection.ping_server, name='Check_connection', daemon=True, kwargs={'rs':rs})
+connection.start()
+
 while (True):
     try:
         if Connection.stop_flag:
-            raise ConnectionError("Connected Fail")
-
-        rs = Client(api_key, api_secret)
-        ws = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
+            raise ConnectionError("Connected Fail")        
     
     except:
         print("ConnectionError")
@@ -30,11 +32,9 @@ while (True):
         continue
 
     strategy_framework = threading.Thread(target=StrategyDriver.run, name='Run', daemon=True, kwargs={'rs':rs, 'ws':ws})
-    connection = threading.Thread(target=Connection.ping_server, name='Check_connection', daemon=True, kwargs={'rs':rs})
 
     ws.start()
     strategy_framework.start()
-    connection.start()
 
     strategy_framework.join()
     
